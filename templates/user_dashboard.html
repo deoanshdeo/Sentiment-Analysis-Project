@@ -1,0 +1,933 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>User Dashboard</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary-color: #0092dc;
+            --secondary-color: #34495e;
+            --background-color: #ecf0f1;
+            --card-bg: #ffffff;
+            --text-color: #333333;
+            --button-text: #ffffff;
+            --border-color: #dddfe2;
+            --input-bg: #f0f2f5;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: var(--background-color);
+            color: var(--text-color);
+            transition: background-color 0.3s, color 0.3s;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .card {
+            background-color: var(--card-bg);
+            border-radius: 12px;
+            padding: 30px;
+            margin-bottom: 20px;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+        }
+
+        .user-details-card {
+            text-align: center;
+            transition: all 0.3s ease;
+        }
+
+        .user-details-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 12px 25px rgba(0, 0, 0, 0.15);
+        }
+
+        .user-avatar {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            background-color: var(--primary-color);
+            color: var(--button-text);
+            font-size: 36px;
+            line-height: 80px;
+            margin: 0 auto 20px;
+        }
+
+        h2, h3 {
+            color: var(--primary-color);
+        }
+
+        .button {
+            background-color: var(--primary-color);
+            color: var(--button-text);
+            border: none;
+            padding: 10px 15px;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        .button:hover {
+            background-color: #c0392b;
+        }
+
+        textarea, input, select {
+            background-color: var(--input-bg);
+            color: var(--text-color);
+            border: 1px solid var(--border-color);
+            padding: 12px;
+            border-radius: 6px;
+            width: 100%;
+            margin-bottom: 15px;
+            transition: border-color 0.3s, box-shadow 0.3s;
+        }
+
+        textarea:focus, input:focus, select:focus {
+            outline: none;
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 2px rgba(231, 76, 60, 0.2);
+        }
+
+        .dashboard-layout {
+            display: flex;
+            min-height: 100vh;
+        }
+
+        .sidebar {
+            width: 60px;
+            background-color: var(--secondary-color);
+            transition: width 0.3s ease;
+            overflow: hidden;
+        }
+
+        .sidebar:hover {
+            width: 200px;
+        }
+
+        .sidebar-menu {
+            list-style-type: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .sidebar-menu li {
+            padding: 15px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        .sidebar-menu li:hover {
+            background-color: rgba(255, 255, 255, 0.1);
+        }
+
+        .sidebar-menu i {
+            font-size: 24px;
+            color: var(--button-text);
+            width: 30px;
+            text-align: center;
+        }
+
+        .sidebar-menu span {
+            margin-left: 10px;
+            color: var(--button-text);
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+
+        .sidebar:hover .sidebar-menu span {
+            opacity: 1;
+        }
+
+        .main-content {
+            flex-grow: 1;
+            padding: 20px;
+            transition: margin-left 0.3s;
+        }
+
+        .flash-message {
+            position: fixed;
+            top: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            background-color: rgba(0, 255, 127, 0.56);
+            color: black;
+            padding: 10px 15px;
+            border-radius: 6px;
+            font-size: 14px;
+            z-index: 1010;
+            opacity: 0;
+            transition: opacity 0.5s ease-in-out;
+        }
+
+        .flash-message.show {
+            opacity: 1;
+        }
+
+        .progress-bar {
+            height: 8px;
+            margin: 25px 0;
+            background-color: #e0e0e0;
+            border-radius: 4px;
+            overflow: hidden;
+            box-shadow: inset 0 1px 3px rgba(0,0,0,0.1);
+        }
+
+        .progress-bar-fill {
+            height: 100%;
+            border-radius: 4px;
+            transition: width 0.5s ease-in-out;
+            background-image: linear-gradient(to right, #ff9966, #ff5e62);
+        }
+
+        .sentiment-meter {
+            height: 8px;
+            margin: 25px 0;
+            background: linear-gradient(to right,
+            #FF4136 0%, #FF851B 25%,
+            #FFDC00 50%, #2ECC40 75%, #0074D9 100%);
+            border-radius: 4px;
+            position: relative;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .sentiment-meter-marker {
+            width: 3px;
+            height: 20px;
+            background-color: #4A0E4E;
+            position: absolute;
+            top: -6px;
+            transform: translateX(-50%);
+            transition: left 0.5s cubic-bezier(0.68, -0.55, 0.27, 1.55);
+            box-shadow: 0 0 10px rgba(0,0,0,0.3);
+        }
+
+        .sentiment-meter-fill {
+            display: none;
+        }
+        /*This is the point where i am making changes to the table*/
+
+        .table-container {
+            overflow-x: auto;
+            margin-top: 20px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            border-radius: 8px;
+            max-width: 90%; /* Limit the maximum width */
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: separate;
+            border-spacing: 0;
+            background-color: var(--card-bg);
+            font-size: 0.9em; /* Slightly reduce font size */
+        }
+
+        th, td {
+            padding: 12px; /* Reduce padding slightly */
+            text-align: left;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        th {
+            background-color: var(--primary-color);
+            color: var(--button-text);
+            font-weight:600;
+            text-transform: uppercase;
+            letter-spacing:0.5px;
+        }
+
+        tr:last-child td{
+            border-bottom:none;
+        }
+
+        tr:hover{
+            background-color: rgba(231,76, 60,0.05);
+        }
+
+        .log-controls{
+            display:flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .search-container {
+            flex-grow:1;
+            margin-right:100px;
+        }
+
+        .search-input {
+            width:100%;
+            padding:10px 15px;
+            padding-right:40px;
+            border:2px solid var(--border-color);
+            border-radius: 25px;
+            font-size: 16px;
+        }
+
+        .search-input:focus{
+            outline:none;
+            border-color:var(--primary-color);
+            box-shadow: 0 0 0 3px rgba(231,76,60,0.1);
+        }
+
+        .search-button {
+            position: absolute;
+            right: 10px;
+            top: 50%;
+            transform: translateY(-50%);
+            background: none;
+            border: none;
+            color: var(--primary-color);
+            font-size: 18px;
+            cursor: pointer;
+        }
+
+        .filter-container{
+            min-width:150px;
+        }
+
+        #logFilterSelect {
+            padding: 10px 15px;
+            border: 2px solid var(--border-color);
+            border-radius: 25px;
+            font-size: 16px;
+            background-color: var(--input-bg);
+            color: var(--text-color);
+        }
+
+        #logFilterSelect:focus {
+            outline: none;
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 3px rgba(231, 76, 60, 0.1);
+        }
+
+        .pagination-controls {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-top: 20px;
+        }
+
+        .pagination-controls button {
+            background-color: var(--primary-color);
+            color: var(--button-text);
+            border: none;
+            padding: 10px 15px;
+            margin: 0 5px;
+            border-radius: 25px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .pagination-controls button:hover {
+            background-color: #c0392b;
+        }
+
+        .pagination-controls button:disabled {
+            background-color: #ccc;
+            cursor: not-allowed;
+        }
+
+        #pageInfo {
+            margin: 0 15px;
+            font-weight: 600;
+        }
+
+        #mode-switch {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            z-index: 1000;
+            background: none;
+            border: none;
+            font-size: 24px;
+            cursor: pointer;
+            color: var(--text-color);
+        }
+
+        body.dark-mode {
+            --background-color: #121212;
+            --card-bg: #1e1e1e;
+            --text-color: #ffffff;
+            --input-bg: #3a3b3c;
+            --border-color: #3a3b3c;
+        }
+        .review-preview {
+            margin-top: 10px;
+            padding: 10px;
+            background-color: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 4px;
+            font-style: italic;
+        }
+
+        #review_text {
+            width: 100%;
+            min-height: 150px;
+            resize: vertical;
+            padding: 15px;
+            border: 2px solid var(--border-color);
+            border-radius: 8px;
+            background-color: var(--input-bg);
+            color: var(--text-color);
+            font-size: 16px;
+            transition: border-color 0.3s ease, box-shadow 0.3s ease;
+            margin-bottom: 20px;
+            box-sizing: border-box;
+            display: block; /* Ensures block-level display */
+        }
+
+        #review_text:focus {
+            outline: none;
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 2px rgba(231, 76, 60, 0.2);
+        }
+
+        #reviewPreview {
+            margin-top: 10px;
+            padding: 10px;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            background-color: var(--card-bg);
+            font-style: italic;
+        }
+
+        .form-group {
+            margin-bottom: 30px;
+        }
+
+        .section-title {
+            font-size: 24px;
+            color: var(--primary-color);
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .model-testing-container {
+            max-width: 800px;
+            margin: 40px auto;
+            padding: 40px;
+            background-color: var(--card-bg);
+            border-radius: 12px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 10px;
+            font-weight: 600;
+            color: var(--text-color);
+            font-size: 18px;
+        }
+
+        #model_selection,
+        #review_text {
+            width: 100%;
+            padding: 15px;
+            border: 2px solid var(--border-color);
+            border-radius: 8px;
+            background-color: var(--input-bg);
+            color: var(--text-color);
+            font-size: 16px;
+            transition: border-color 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        #model_selection:focus,
+        #review_text:focus {
+            outline: none;
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 3px rgba(231, 76, 60, 0.1);
+        }
+
+        #model_selection{
+            height: 50px;
+        }
+        .section-title {
+            font-size: 28px;
+            color: var(--primary-color);
+            margin-bottom: 30px;
+            text-align: center;
+            font-weight: 600;
+        }
+
+        .model-testing-container {
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .btn {
+            display: block;
+            width: 100%;
+            padding: 14px 20px;
+            font-size: 18px;
+            font-weight: 600;
+            text-align: center;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .btn-primary {
+            padding: 15px 25px;
+            font-size: 18px;
+            font-weight: 600;
+        }
+
+        .btn-primary:hover {
+            background-color: #c0392b;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(231, 76, 60, 0.3);
+        }
+
+        .sentiment-result {
+            margin-top: 40px;
+            padding: 30px;
+            background-color: var(--card-bg);
+            /*border: 2px solid var(--border-color);*/
+            border-radius: 12px;
+            /*box-shadow: 0 5px 20px rgba(0, 0, 0, 0.05);*/
+        }
+
+        .stars {
+            color: #FFD700;
+            font-size: 24px;
+            margin-bottom: 15px;
+            text-shadow: 1px 1px 1px rgba(0,0,0,0.1);
+        }
+
+        .result-text {
+            font-size: 20px;
+            margin-top: 25px;
+        }
+
+        #sentimentClass, #confidenceScoreText {
+            font-weight: bold;
+            color: #333;
+        }
+
+        .sentiment-result p {
+            margin-bottom: 10px;
+            font-size: 16px;
+            color: #555;
+        }
+        /*@media screen and (max-width: 600px) {*/
+        /*    .log-controls {*/
+        /*        flex-direction: column;*/
+        /*        align-items: stretch;*/
+        /*    }*/
+
+        /*    .search-container {*/
+        /*        width:60%;*/
+        /*        !*margin-right: 0;*!*/
+        /*        !*margin-bottom: 15px;*!*/
+        /*    }*/
+        /*}*/
+
+        .log-controls::after {
+            content: "";
+            display: table;
+            clear: both;
+            margin-bottom: 15px;
+        }
+
+        .truncate {
+            max-width: 200px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            position: relative;
+        }
+
+        .truncate:hover::after {
+            content: attr(data-full-text);
+            position: absolute;
+            left: 0;
+            top: 100%;
+            background-color: var(--card-bg);
+            border: 1px solid var(--border-color);
+            padding: 10px;
+            border-radius: 5px;
+            z-index: 1000;
+            white-space: normal;
+            width: 300px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+        }
+
+    </style>
+</head>
+<body>
+<button id="mode-switch"><i class="fas fa-sun"></i></button>
+<div class="dashboard-layout">
+    <div class="sidebar" id="sidebar">
+        <ul class="sidebar-menu">
+            <li onclick="showSection('home')"><i class="fas fa-home"></i><span>Home</span></li>
+            <li onclick="showSection('model-testing')"><i class="fas fa-chart-line"></i><span>Model Testing</span></li>
+            <li onclick="showSection('log-history')"><i class="fas fa-clipboard-list"></i><span>Log History</span></li>
+            <li onclick="logout()"><i class="fas fa-sign-out-alt"></i><span>Logout</span></li>
+        </ul>
+    </div>
+    <div class="main-content">
+        <div id="home-section" class="card user-details-card">
+            <div class="user-avatar">{{ user_details.name[0].upper() }}</div>
+            <h3>Welcome, {{ user_details.name }}!</h3>
+            <p><strong>Email:</strong> {{ user_details.email }}</p>
+            <p><strong>Last Login:</strong> {{ user_details.last_login }}</p>
+        </div>
+
+        <div id="model-testing-section" class="card" style="display: none;">
+            <h1 class="section-title">Model Testing</h1>
+            <div class="model-testing-container">
+                <form id="sentimentForm" onsubmit="submitForm(event)">
+                    <div class="form-group">
+                        <label for="model_selection">Select Model:</label>
+                        <select id="model_selection" name="model_selection" required>
+                            <option value="best_model_state1.bin">Omu 1.0</option>
+                            <option value="best_model_state.bin">Omu 0.5</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="review_text">Enter your review:</label>
+                        <textarea id="review_text" name="review_text" placeholder="Minimum 8 words required" required oninput="adjustTextareaHeight(this); previewText()"></textarea>
+                        <div id="reviewPreview" class="review-preview"></div>
+                    </div>
+                    <button type="submit" class="btn btn-primary">Analyze Sentiment</button>
+                </form>
+                <div id="sentimentResult" class="sentiment-result"></div>
+            </div>
+        </div>
+
+        <div id="log-history-section" class="card" style="display: none;">
+            <h2>All Log History</h2>
+            <div class="log-controls">
+                <div class="search-container">
+                    <input type="text" id="logSearchInput" placeholder="Search logs..." class="search-input">
+
+                </div>
+                <div class="filter-container">
+                    <select id="logFilterSelect" onchange="filterLogs()">
+                        <option value="all">All Sentiments</option>
+                        <option value="Very Positive">Very Positive</option>
+                        <option value="positive">Positive</option>
+                        <option value="neutral">Neutral</option>
+                        <option value="negative">Negative</option>
+                        <option value="Very Negative">Very Negative</option>
+                    </select>
+                </div>
+            </div>
+            <div class="table-container">
+                <table id="logTable">
+                    <thead>
+                    <tr>
+                        <th>Timestamp</th>
+                        <th>Text</th>
+                        <th>Sentiment</th>
+                        <th>Confidence</th>
+                        <th>Model Used</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    </tbody>
+                </table>
+            </div>
+            <div id="paginationControls" class="pagination-controls">
+                <button id="prevPage" onclick="changePage(-1)" class="button">Previous</button>
+                <span id="pageInfo">Page 1 of 1</span>
+                <button id="nextPage" onclick="changePage(1)" class="button">Next</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="flashMessage" class="flash-message"></div>
+
+<script>
+    let gibberishWarningGiven = false;
+    let currentPage = 1;
+    const logsPerPage = 10;
+    let allLogs = [];
+
+    function showSection(sectionId) {
+    document.getElementById('home-section').style.display = 'none';
+    document.getElementById('model-testing-section').style.display = 'none';
+    document.getElementById('log-history-section').style.display = 'none';
+    document.getElementById(sectionId + '-section').style.display = 'block';
+
+    if (sectionId === 'log-history') {
+        fetchLogHistory();
+    }
+}
+
+    function adjustTextareaHeight(element) {
+        element.style.height = "auto";
+        element.style.height = (element.scrollHeight) + "px";
+    }
+
+    function showFlashMessage(message) {
+        var flashMessage = document.getElementById("flashMessage");
+        flashMessage.textContent = message;
+        flashMessage.classList.add("show");
+        setTimeout(() => {
+            flashMessage.classList.remove("show");
+        }, 3000);
+    }
+
+    function previewText() {
+        var reviewText = document.getElementById("review_text").value;
+        var previewDiv = document.getElementById("reviewPreview");
+        previewDiv.textContent = reviewText;
+
+        if (isGibberish(reviewText)) {
+            if (!gibberishWarningGiven) {
+                showFlashMessage("Warning: This text appears to be gibberish. Please enter a valid review.");
+                gibberishWarningGiven = true;
+            } else {
+                document.getElementById("review_text").value = "";
+                previewDiv.textContent = "";
+                showFlashMessage("Gibberish text detected and removed. Please enter a valid review.");
+                gibberishWarningGiven = false;
+            }
+        } else {
+            gibberishWarningGiven = false;
+        }
+    }
+
+    function isGibberish(text) {
+        var words = text.trim().split(/\s+/);
+        var gibberishCount = 0;
+        for (var word of words) {
+            if (word.length > 15 || /[^a-zA-Z\s]/.test(word)) {
+                gibberishCount++;
+            }
+        }
+        return gibberishCount / words.length > 0.5;
+    }
+
+    function submitForm(event) {
+    event.preventDefault();
+    console.log("Form submission started");
+    var form = document.getElementById("sentimentForm");
+    var reviewText = document.getElementById("review_text").value;
+    var modelSelection = document.getElementById("model_selection").value;
+
+    var wordCount = reviewText.trim().split(/\s+/).length;
+    if (wordCount < 8) {
+        showFlashMessage("Warning: Please enter at least 8 words.");
+        return;
+    }
+
+    var submitButton = form.querySelector('button[type="submit"]');
+    submitButton.disabled = true;
+    var formData = new FormData(form);
+    formData.append('model_selection', document.getElementById('model_selection').value);
+
+    fetch("/user_dashboard", {
+        method: "POST",
+        body: formData
+    })
+    .then(response => {
+        console.log("Response received", response);
+        return response.json();
+    })
+    .then(data => {
+        console.log("Parsed data", data);
+        var stars = '';
+        for (var i = 0; i < data.sentiment; i++) {
+            stars += '<i class="fas fa-star"></i>';
+        }
+
+        var meterPosition = ((data.sentiment - 1) / 4) * 100;
+
+        var sentimentResult = document.getElementById("sentimentResult");
+        sentimentResult.innerHTML = `
+            <div class="sentiment-${data.sentiment}">
+                <p>Sentiment Prediction:</p>
+                <div class="stars">${stars}</div>
+                <div class="sentiment-meter">
+                    <div class="sentiment-meter-marker" style="left: ${meterPosition}%"></div>
+                </div>
+                <p>Sentiment Class: <span id="sentimentClass">${data.sentiment_class}</span></p>
+                <p>Confidence Score: <span id="confidenceScoreText">0.00%</span></p>
+                <div class="progress-bar">
+                    <div class="progress-bar-fill" style="width: 0%;" data-progress="0%"></div>
+                </div>
+            </div>
+        `;
+
+        let confidenceProgress = 0;
+        let confidenceInterval = setInterval(() => {
+            confidenceProgress += 1;
+            let currentWidth = (confidenceProgress / 100) * (data.confidence_score * 100);
+            let barFill = sentimentResult.querySelector('.progress-bar-fill');
+            barFill.style.width = `${currentWidth}%`;
+            barFill.setAttribute('data-progress', `${currentWidth.toFixed(2)}%`);
+            barFill.style.background = getConfidenceColor(data.confidence_score);
+
+            document.getElementById('confidenceScoreText').textContent = `${currentWidth.toFixed(2)}%`;
+
+            if (confidenceProgress >= 100) {
+                clearInterval(confidenceInterval);
+                document.getElementById('confidenceScoreText').textContent = `${(data.confidence_score * 100).toFixed(2)}%`;
+            }
+        }, 20);
+    })
+    .catch(error => {
+        console.error('Error:', error);
+        var sentimentResult = document.getElementById("sentimentResult");
+        sentimentResult.innerHTML = `<p>An error occurred while processing your request. Please try again.</p>`;
+    })
+    .finally(() => {
+        submitButton.disabled = false;
+    });
+}
+
+function getConfidenceColor(score) {
+    if (score < 0.33) return 'linear-gradient(135deg, #ff9966, #ff5e62)';
+    if (score < 0.66) return 'linear-gradient(135deg, #ffd86f, #fc6262)';
+    return 'linear-gradient(135deg, #7FFF00, #00CED1)';
+}
+
+    function fetchLogHistory() {
+    console.log("Fetching log history...");
+    fetch("/get_user_logs")
+        .then(response => response.json())
+        .then(data => {
+            console.log("Logs received:", data);
+            allLogs = data;
+            currentPage = 1;
+            updateLogTable();
+        })
+        .catch(error => {
+            console.error('Error fetching logs:', error);
+        });
+}
+
+function updateLogTable() {
+    console.log("Updating log table...");
+    console.log("All logs:", allLogs);
+    const tableBody = document.querySelector("#logTable tbody");
+    tableBody.innerHTML = "";
+
+    const filteredLogs = filterLogs();
+    console.log("Filtered logs:", filteredLogs);
+    const startIndex = (currentPage - 1) * logsPerPage;
+    const endIndex = startIndex + logsPerPage;
+    const logsToShow = filteredLogs.slice(startIndex, endIndex);
+    console.log("Logs to show:", logsToShow);
+
+    logsToShow.forEach(log => {
+        const row = tableBody.insertRow();
+        row.insertCell(0).textContent = new Date(log.timestamp).toLocaleString();
+
+        const textCell = row.insertCell(1);
+        const truncatedText = document.createElement('div');
+        truncatedText.className = 'truncate';
+        truncatedText.textContent = log.text.substring(0, 50) + '...';
+        truncatedText.setAttribute('data-full-text', log.text);
+        textCell.appendChild(truncatedText);
+
+        row.insertCell(2).textContent = log.sentiment_class;
+        row.insertCell(3).textContent = log.confidence_score.toFixed(2);
+        row.insertCell(4).textContent = log.model_used || 'N/A';
+    });
+
+    updatePagination(filteredLogs.length);
+}
+
+    function filterLogs() {
+    const filterValue = document.getElementById('logFilterSelect').value.toLowerCase();
+    const searchValue = document.getElementById('logSearchInput').value.toLowerCase();
+
+    return allLogs.filter(log => {
+        const matchesFilter = filterValue === 'all' || log.sentiment_class.toLowerCase() === filterValue;
+        const matchesSearch = log.text.toLowerCase().includes(searchValue) ||
+                              log.sentiment_class.toLowerCase().includes(searchValue) ||
+                              (log.model_used && log.model_used.toLowerCase().includes(searchValue));
+        return matchesFilter && matchesSearch;
+    });
+}
+
+    function searchLogs() {
+        currentPage = 1;
+        updateLogTable();
+    }
+
+    function updatePagination(totalLogs) {
+        const totalPages = Math.ceil(totalLogs / logsPerPage);
+        document.getElementById('pageInfo').textContent = `Page ${currentPage} of ${totalPages}`;
+        document.getElementById('prevPage').disabled = currentPage === 1;
+        document.getElementById('nextPage').disabled = currentPage === totalPages || totalLogs === 0;
+    }
+
+    function changePage(direction) {
+        currentPage += direction;
+        updateLogTable();
+    }
+
+    function logout() {
+        window.location.href = "/";
+    }
+
+    const body = document.body;
+    const modeSwitch = document.getElementById('mode-switch');
+    const modeIcon = modeSwitch.querySelector('i');
+
+    modeSwitch.addEventListener('click', () => {
+        body.classList.toggle('dark-mode');
+        updateModeIcon();
+    });
+
+    function updateModeIcon() {
+        if (body.classList.contains('dark-mode')) {
+            modeIcon.className = 'fas fa-moon';
+        } else {
+            modeIcon.className = 'fas fa-sun';
+        }
+    }
+
+    document.addEventListener('DOMContentLoaded', function() {
+        document.getElementById('logSearchInput').addEventListener('input', searchLogs);
+        document.getElementById('logFilterSelect').addEventListener('change', searchLogs);
+        showSection('home');
+    });
+
+    document.addEventListener('mouseover', function(event) {
+    if (event.target.classList.contains('truncate')) {
+        const fullText = event.target.getAttribute('data-full-text');
+        const tooltip = document.createElement('div');
+        tooltip.className = 'tooltip';
+        tooltip.textContent = fullText;
+        tooltip.style.position = 'absolute';
+        tooltip.style.left = event.pageX + 'px';
+        tooltip.style.top = event.pageY + 'px';
+        tooltip.style.backgroundColor = 'white';
+        tooltip.style.border = '1px solid black';
+        tooltip.style.padding = '5px';
+        tooltip.style.zIndex = '1000';
+        document.body.appendChild(tooltip);
+
+        event.target.addEventListener('mouseleave', function() {
+            document.body.removeChild(tooltip);
+        }, { once: true });
+    }
+});
+document.addEventListener('DOMContentLoaded', function() {
+    document.getElementById('logSearchInput').addEventListener('input', searchLogs);
+    document.getElementById('logFilterSelect').addEventListener('change', searchLogs);
+    showSection('home');
+});
+</script>
+</body>
+</html>

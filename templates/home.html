@@ -1,0 +1,348 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Welcome</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" rel="stylesheet">
+    <style>
+        body, html {
+            height: 100%;
+            font-family: 'Poppins', sans-serif;
+            margin: 0;
+            overflow: hidden;
+            transition: background-color 0.3s, color 0.3s;
+        }
+        body.light-mode {
+            background: #f0f0f0;
+            color: #333;
+        }
+        body.dark-mode {
+            background: #121212;
+            color: #fff;
+        }
+        .container {
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            z-index: 2;
+        }
+        .welcome-card {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 20px;
+            backdrop-filter: blur(10px);
+            padding: 40px;
+            width: 400px;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2);
+            transition: all 0.3s ease;
+        }
+        .light-mode .welcome-card {
+            background: rgba(255, 255, 255, 0.8);
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);
+        }
+        .dark-mode .welcome-card {
+            background: rgba(30, 30, 30, 0.8);
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.3);
+        }
+        h1 {
+            font-size: 36px;
+            margin-bottom: 20px;
+            text-align: center;
+            transition: color 0.3s;
+        }
+        .light-mode h1 {
+            color: #2c3e50;
+        }
+        .dark-mode h1 {
+            color: #ecf0f1;
+        }
+        .welcome-text {
+            margin-bottom: 30px;
+            text-align: center;
+            transition: color 0.3s;
+            font-size: 18px;
+        }
+        .light-mode .welcome-text {
+            color: #34495e;
+        }
+        .dark-mode .welcome-text {
+            color: #bdc3c7;
+        }
+        .btn-login {
+            display: block;
+            width: 100%;
+            padding: 12px;
+            margin-bottom: 15px;
+            border: none;
+            border-radius: 25px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            text-align: center;
+            text-decoration: none;
+            color: #fff;
+            position: relative;
+            overflow: hidden;
+            font-size: 16px;
+        }
+        .btn-login:before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(120deg, transparent, rgba(255,255,255,0.3), transparent);
+            transition: all 0.5s;
+        }
+        .btn-login:hover:before {
+            left: 100%;
+        }
+        .btn-login:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+        }
+        .btn-user {
+            background: #3498db;
+        }
+        .btn-admin {
+            background: #e74c3c;
+        }
+        #particles-js {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            top: 0;
+            left: 0;
+            z-index: 1;
+        }
+        #mode-switch {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            z-index: 3;
+            background: none;
+            border: none;
+            font-size: 24px;
+            cursor: pointer;
+            transition: color 0.3s;
+        }
+        .light-mode #mode-switch {
+            color: #333;
+        }
+        .dark-mode #mode-switch {
+            color: #fff;
+        }
+        .logo {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            width: 120px;
+            height: 120px;
+            margin-bottom: 20px;
+            border-radius: 50%;
+            background: #fff;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            transition: all 0.3s ease;
+        }
+        .logo i {
+            font-size: 60px;
+            color: #3498db;
+            transition: all 0.3s ease;
+        }
+
+        .dark-mode .logo {
+            background: #333;
+            box-shadow: 0 5px 15px rgba(255,255,255,0.1);
+        }
+
+        .dark-mode .logo i {
+            color: #e74c3c;
+        }
+        #neural-network {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 0;
+        }
+    </style>
+</head>
+<body class="light-mode">
+<canvas id="neural-network"></canvas>
+<div id="particles-js"></div>
+<button id="mode-switch"><i class="fas fa-sun"></i></button>
+<div class="container">
+    <div class="welcome-card">
+        <div class="logo">
+            <i class="fas fa-user-lock fa-4x"></i>
+        </div>
+        <h1>Welcome</h1>
+        <p class="welcome-text">Choose your login option to access the system</p>
+        <a href="{{ url_for('login') }}" class="btn-login btn-user">
+            <i class="fas fa-user-circle"></i> User Login
+        </a>
+        <a href="{{ url_for('admin_login') }}" class="btn-login btn-admin">
+            <i class="fas fa-user-shield"></i> Admin Login
+        </a>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/tensorflow/3.18.0/tf.min.js"></script>
+<script>
+    const body = document.body;
+    const modeSwitch = document.getElementById('mode-switch');
+    const modeIcon = modeSwitch.querySelector('i');
+
+    modeSwitch.addEventListener('click', () => {
+        body.classList.toggle('light-mode');
+        body.classList.toggle('dark-mode');
+        updateModeIcon();
+        updateParticles();
+    });
+
+    function updateModeIcon() {
+        if (body.classList.contains('light-mode')) {
+            modeIcon.className = 'fas fa-sun';
+        } else {
+            modeIcon.className = 'fas fa-moon';
+        }
+    }
+
+    function updateParticles() {
+        const particleColor = body.classList.contains('light-mode') ? "#333333" : "#ffffff";
+        particlesJS("particles-js", {
+            particles: {
+                number: { value: 150, density: { enable: true, value_area: 800 } },
+                color: { value: particleColor },
+                shape: { type: "circle" },
+                opacity: { value: 0.5, random: true, anim: { enable: true, speed: 1, opacity_min: 0.1, sync: false } },
+                size: { value: 3, random: true, anim: { enable: true, speed: 2, size_min: 0.1, sync: false } },
+                line_linked: { enable: true, distance: 150, color: particleColor, opacity: 0.4, width: 1 },
+                move: {
+                    enable: true,
+                    speed: 4,
+                    direction: "none",
+                    random: true,
+                    straight: false,
+                    out_mode: "out",
+                    bounce: false,
+                    attract: { enable: true, rotateX: 600, rotateY: 1200 }
+                }
+            },
+            interactivity: {
+                detect_on: "canvas",
+                events: {
+                    onhover: {
+                        enable: true,
+                        mode: "repulse"
+                    },
+                    onclick: {
+                        enable: true,
+                        mode: "push"
+                    },
+                    resize: true
+                },
+                modes: {
+                    repulse: {
+                        distance: 100,
+                        duration: 0.4
+                    },
+                    push: {
+                        particles_nb: 4
+                    }
+                }
+            },
+            retina_detect: true
+        });
+    }
+
+    // Initial particle setup
+    updateParticles();
+
+    // Neural Network Visualization
+    const canvas = document.getElementById('neural-network');
+    const ctx = canvas.getContext('2d');
+
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+
+    const neurons = [];
+    const numNeurons = 100;
+    const maxConnections = 5;
+    const neuronRadius = 3;
+    const connectionDistance = 150;
+
+    class Neuron {
+        constructor() {
+            this.x = Math.random() * canvas.width;
+            this.y = Math.random() * canvas.height;
+            this.vx = (Math.random() - 0.5) * 0.5;
+            this.vy = (Math.random() - 0.5) * 0.5;
+            this.connections = [];
+        }
+
+        update() {
+            this.x += this.vx;
+            this.y += this.vy;
+
+            if (this.x < 0 || this.x > canvas.width) this.vx *= -1;
+            if (this.y < 0 || this.y > canvas.height) this.vy *= -1;
+
+            this.connections = neurons.filter(n =>
+                n !== this &&
+                Math.hypot(n.x - this.x, n.y - this.y) < connectionDistance
+            ).slice(0, maxConnections);
+        }
+
+        draw() {
+            ctx.beginPath();
+            ctx.arc(this.x, this.y, neuronRadius, 0, Math.PI * 2);
+            ctx.fillStyle = body.classList.contains('light-mode') ? 'rgba(0, 0, 0, 0.5)' : 'rgba(255, 255, 255, 0.5)';
+            ctx.fill();
+
+            this.connections.forEach(neuron => {
+                const distance = Math.hypot(neuron.x - this.x, neuron.y - this.y);
+                const opacity = 1 - (distance / connectionDistance);
+                ctx.beginPath();
+                ctx.moveTo(this.x, this.y);
+                ctx.lineTo(neuron.x, neuron.y);
+                ctx.strokeStyle = body.classList.contains('light-mode')
+                    ? `rgba(0, 0, 0, ${opacity * 0.2})`
+                    : `rgba(255, 255, 255, ${opacity * 0.2})`;
+                ctx.stroke();
+            });
+        }
+    }
+
+    for (let i = 0; i < numNeurons; i++) {
+        neurons.push(new Neuron());
+    }
+
+    function animate() {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+        neurons.forEach(neuron => {
+            neuron.update();
+            neuron.draw();
+        });
+
+        requestAnimationFrame(animate);
+    }
+
+    animate();
+
+    window.addEventListener('resize', () => {
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+    });
+</script>
+</body>
+</html>

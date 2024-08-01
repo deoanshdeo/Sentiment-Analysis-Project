@@ -1,0 +1,476 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Register</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" rel="stylesheet">
+    <style>
+        body, html {
+            height: 100%;
+            font-family: 'Poppins', sans-serif;
+            margin: 0;
+            overflow: hidden;
+            transition: background-color 0.3s, color 0.3s;
+        }
+        body.light-mode {
+            background: #f0f0f0;
+            color: #333;
+        }
+        body.dark-mode {
+            background: #121212;
+            color: #fff;
+        }
+        .container {
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            z-index: 2;
+        }
+        .register-card {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 20px;
+            backdrop-filter: blur(10px);
+            padding: 40px;
+            width: 400px;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2);
+            transition: all 0.3s ease;
+        }
+        .light-mode .register-card {
+            background: rgba(255, 255, 255, 0.8);
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);
+        }
+        .dark-mode .register-card {
+            background: rgba(30, 30, 30, 0.8);
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.3);
+        }
+        h1 {
+            font-size: 36px;
+            margin-bottom: 20px;
+            text-align: center;
+            transition: color 0.3s;
+        }
+        .light-mode h1 {
+            color: #2c3e50;
+        }
+        .dark-mode h1 {
+            color: #ecf0f1;
+        }
+        .register-form {
+            width: 100%;
+        }
+        .form-group {
+            margin-bottom: 20px;
+        }
+        label {
+            display: block;
+            margin-bottom: 5px;
+            transition: color 0.3s;
+        }
+        .light-mode label {
+            color: #34495e;
+        }
+        .dark-mode label {
+            color: #bdc3c7;
+        }
+        input {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #bdc3c7;
+            border-radius: 5px;
+            font-size: 16px;
+            transition: all 0.3s ease;
+        }
+        .dark-mode input {
+            background: #2c3e50;
+            color: #ecf0f1;
+            border-color: #34495e;
+        }
+        .btn-register {
+            display: block;
+            width: 100%;
+            padding: 12px;
+            border: none;
+            border-radius: 25px;
+            font-weight: 600;
+            font-size: 16px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        .light-mode .btn-register {
+            background: #3498db;
+            color: #fff;
+        }
+        .dark-mode .btn-register {
+            background: #e74c3c;
+            color: #fff;
+        }
+        .btn-register:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+        }
+        .login-link {
+            margin-top: 20px;
+            text-align: center;
+        }
+        .login-link a {
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+        .light-mode .login-link a {
+            color: #3498db;
+        }
+        .dark-mode .login-link a {
+            color: #e74c3c;
+        }
+        #particles-js {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            top: 0;
+            left: 0;
+            z-index: 1;
+        }
+        .alert {
+            background-color: #f8d7da;
+            color: #721c24;
+            padding: 10px;
+            border-radius: 5px;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+        #neural-network {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 0;
+        }
+        #mode-switch {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            z-index: 3;
+            background: none;
+            border: none;
+            font-size: 24px;
+            cursor: pointer;
+            transition: color 0.3s;
+        }
+        .light-mode #mode-switch {
+            color: #333;
+        }
+        .dark-mode #mode-switch {
+            color: #fff;
+        }
+        .logo {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            width: 120px;
+            height: 120px;
+            margin-bottom: 20px;
+            border-radius: 50%;
+            background: #fff;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            transition: all 0.3s ease;
+        }
+        .logo i {
+            font-size: 60px;
+            transition: all 0.3s ease;
+        }
+        .light-mode .logo {
+            background: #fff;
+        }
+        .light-mode .logo i {
+            color: #3498db;
+        }
+        .dark-mode .logo {
+            background: #333;
+            box-shadow: 0 5px 15px rgba(255,255,255,0.1);
+        }
+        .dark-mode .logo i {
+            color: #e74c3c;
+        }
+        #otp-form {
+            display: none;
+        }
+        #otp-input {
+            letter-spacing: 0.5em;
+            text-align: center;
+        }
+        #home-button {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            z-index: 3;
+            background: none;
+            border: none;
+            font-size: 24px;
+            cursor: pointer;
+            transition: color 0.3s;
+            color: #333;
+            text-decoration: none;
+        }
+        .light-mode #home-button {
+            color: #333;
+        }
+        .dark-mode #home-button {
+            color: #fff;
+        }
+    </style>
+</head>
+<body class="light-mode">
+<canvas id="neural-network"></canvas>
+<div id="particles-js"></div>
+<button id="mode-switch"><i class="fas fa-sun"></i></button>
+<a href="{{ url_for('home') }}" id="home-button"><i class="fas fa-home"></i></a>
+<div class="container">
+    <div class="register-card">
+        <div class="logo">
+            <i class="fas fa-user-plus"></i>
+        </div>
+        <h1>Register</h1>
+        <div id="message" class="alert" role="alert" style="display: none;"></div>
+        <form method="post" class="register-form" id="register-form">
+            <div class="form-group">
+                <label for="username">Username:</label>
+                <input type="text" id="username" name="username" required>
+            </div>
+            <div class="form-group">
+                <label for="email">Email:</label>
+                <input type="email" id="email" name="email" required>
+            </div>
+            <div class="form-group">
+                <label for="password">Password:</label>
+                <input type="password" id="password" name="password" required>
+            </div>
+            <div class="form-group">
+                <label for="phone">Phone:</label>
+                <input type="tel" id="phone" name="phone" required>
+            </div>
+            <button type="button" class="btn-register" onclick="sendOTP()">Register</button>
+        </form>
+
+        <form method="post" class="register-form" id="otp-form" style="display: none;">
+            <div class="form-group">
+                <label for="otp">Enter OTP:</label>
+                <input type="text" id="otp-input" name="otp" required maxlength="6" pattern="\d{6}">
+            </div>
+            <button type="button" class="btn-register" onclick="verifyOTP()">Verify OTP</button>
+        </form>
+
+        <div class="login-link">
+            <a href="{{ url_for('login') }}">Already have an account? Login here</a>
+        </div>
+    </div>
+</div>
+<script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
+<script>
+    const body = document.body;
+    const modeSwitch = document.getElementById('mode-switch');
+    const modeIcon = modeSwitch.querySelector('i');
+    const homeButton = document.getElementById('home-button');
+
+    modeSwitch.addEventListener('click', () => {
+        body.classList.toggle('light-mode');
+        body.classList.toggle('dark-mode');
+        updateModeIcon();
+        updateParticles();
+    });
+
+    function updateModeIcon() {
+        if (body.classList.contains('light-mode')) {
+            modeIcon.className = 'fas fa-sun';
+            homeButton.style.color = '#333';
+        } else {
+            modeIcon.className = 'fas fa-moon';
+            homeButton.style.color = '#fff';
+        }
+    }
+
+    function updateParticles() {
+        const particleColor = body.classList.contains('light-mode') ? "#333333" : "#ffffff";
+        particlesJS("particles-js", {
+            particles: {
+                number: { value: 80, density: { enable: true, value_area: 800 } },
+                color: { value: particleColor },
+                shape: { type: "circle" },
+                opacity: { value: 0.5, random: true, anim: { enable: true, speed: 1, opacity_min: 0.1, sync: false } },
+                size: { value: 3, random: true, anim: { enable: true, speed: 2, size_min: 0.1, sync: false } },
+                line_linked: { enable: true, distance: 150, color: particleColor, opacity: 0.4, width: 1 },
+                move: {
+                    enable: true,
+                    speed: 2,
+                    direction: "none",
+                    random: false,
+                    straight: false,
+                    out_mode: "out",
+                    bounce: false,
+                    attract: { enable: false, rotateX: 600, rotateY: 1200 }
+                }
+            },
+            interactivity: {
+                detect_on: "canvas",
+                events: {
+                    onhover: { enable: true, mode: "repulse" },
+                    onclick: { enable: true, mode: "push" },
+                    resize: true
+                },
+                modes: {
+                    repulse: { distance: 100, duration: 0.4 },
+                    push: { particles_nb: 4 }
+                }
+            },
+            retina_detect: true
+        });
+    }
+
+    // Initial particle setup
+    updateParticles();
+
+    // Neural Network Visualization
+    const canvas = document.getElementById('neural-network');
+    const ctx = canvas.getContext('2d');
+
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+
+    const neurons = [];
+    const numNeurons = 100;
+    const maxConnections = 5;
+    const neuronRadius = 3;
+    const connectionDistance = 150;
+
+    class Neuron {
+        constructor() {
+            this.x = Math.random() * canvas.width;
+            this.y = Math.random() * canvas.height;
+            this.vx = (Math.random() - 0.5) * 0.5;
+            this.vy = (Math.random() - 0.5) * 0.5;
+            this.connections = [];
+        }
+
+        update() {
+            this.x += this.vx;
+            this.y += this.vy;
+
+            if (this.x < 0 || this.x > canvas.width) this.vx *= -1;
+            if (this.y < 0 || this.y > canvas.height) this.vy *= -1;
+
+            this.connections = neurons.filter(n =>
+                n !== this &&
+                Math.hypot(n.x - this.x, n.y - this.y) < connectionDistance
+            ).slice(0, maxConnections);
+        }
+
+        draw() {
+            ctx.beginPath();
+            ctx.arc(this.x, this.y, neuronRadius, 0, Math.PI * 2);
+            ctx.fillStyle = body.classList.contains('light-mode') ? 'rgba(0, 0, 0, 0.5)' : 'rgba(255, 255, 255, 0.5)';
+            ctx.fill();
+
+            this.connections.forEach(neuron => {
+                const distance = Math.hypot(neuron.x - this.x, neuron.y - this.y);
+                const opacity = 1 - (distance / connectionDistance);
+                ctx.beginPath();
+                ctx.moveTo(this.x, this.y);
+                ctx.lineTo(neuron.x, neuron.y);
+                ctx.strokeStyle = body.classList.contains('light-mode')
+                    ? `rgba(0, 0, 0, ${opacity * 0.2})`
+                    : `rgba(255, 255, 255, ${opacity * 0.2})`;
+                ctx.stroke();
+            });
+        }
+    }
+
+    for (let i = 0; i < numNeurons; i++) {
+        neurons.push(new Neuron());
+    }
+
+    function animate() {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+        neurons.forEach(neuron => {
+            neuron.update();
+            neuron.draw();
+        });
+
+        requestAnimationFrame(animate);
+    }
+
+    animate();
+
+    window.addEventListener('resize', () => {
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+    });
+
+    function sendOTP() {
+        const form = document.getElementById('register-form');
+        const formData = new FormData(form);
+        formData.append('action', 'send_otp');
+
+        fetch('/register', {
+            method: 'POST',
+            body: formData
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                document.getElementById('register-form').style.display = 'none';
+                document.getElementById('otp-form').style.display = 'block';
+                showMessage(data.message, 'success');
+            } else {
+                showMessage(data.message, 'error');
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            showMessage('An error occurred. Please try again.', 'error');
+        });
+    }
+
+    function verifyOTP() {
+        const otp = document.getElementById('otp-input').value;
+        const formData = new FormData();
+        formData.append('action', 'verify_otp');
+        formData.append('otp', otp);
+
+        fetch('/register', {
+            method: 'POST',
+            body: formData
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                showMessage(data.message, 'success');
+                setTimeout(() => {
+                    window.location.href = "{{ url_for('login') }}";
+                }, 2000);
+            } else {
+                showMessage(data.message, 'error');
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            showMessage('An error occurred. Please try again.', 'error');
+        });
+    }
+
+    function showMessage(message, type) {
+        const messageElement = document.getElementById('message');
+        messageElement.textContent = message;
+        messageElement.style.display = 'block';
+        messageElement.className = 'alert ' + (type === 'success' ? 'alert-success' : 'alert-danger');
+    }
+</script>
+</body>
+</html>
